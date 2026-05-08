@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hindi Mangal Typing - Exam Mode</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>हिंदी मंगल टाइपिंग टेस्ट (सरकारी मानक)</h2>
+        
+        <div id="setup-screen">
+            <input type="text" id="user-name" placeholder="अपना नाम दर्ज करें" required>
+            <select id="time-limit">
+                <option value="60">1 मिनट</option>
+                <option value="120">2 मिनट</option>
+                <option value="300" selected>5 मिनट (परीक्षा मोड)</option>
+                <option value="600">10 मिनट</option>
+            </select>
+            <button id="start-btn">टेस्ट शुरू करें</button>
+            <p style="font-size: 0.8em; color: #666; margin-top: 10px;">नियम: 1 गलत शब्द = -5 पेनल्टी | 5 गलती माफ़</p>
+        </div>
+
+        <div id="test-screen" class="hidden">
+            <div class="stats-bar">
+                <div>समय: <span id="timer">00:00</span></div>
+                <div>गलती: <span id="error-count">0</span></div>
+                <div>नेट स्पीड: <span id="live-wpm">0</span> WPM</div>
+            </div>
+            <div id="text-display" class="text-box"></div>
+            <textarea id="text-input" placeholder="टाइपिंग यहाँ शुरू करें..." spellcheck="false"></textarea>
+            <button id="reset-btn" onclick="location.reload()">रद्द करें</button>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <h2 id="status-text"></h2>
+            <div class="result-grid">
+                <p>नाम: <strong id="res-name"></strong></p>
+                <p>कुल शब्द (Gross): <span id="res-gross"></span></p>
+                <p>गलत शब्द: <span id="res-errors"></span></p>
+                <p>पेनल्टी शब्द: <span id="res-penalty"></span></p>
+                <p>शुद्ध शब्द (Net): <strong id="res-net"></strong></p>
+                <p>नेट स्पीड: <strong id="res-speed"></strong> WPM</p>
+            </div>
+            <button class="retry-btn" onclick="location.reload()">दोबारा प्रयास करें</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
