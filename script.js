@@ -1,26 +1,32 @@
-const sampleText = "भारत एक विशाल लोकतांत्रिक देश है जहाँ विभिन्न धर्मों और संस्कृतियों के लोग प्रेम और सद्भाव के साथ रहते हैं। हिंदी भाषा हमारी एकता का प्रतीक है। सरकारी कार्यों में मंगल फोंट का प्रयोग अनिवार्य हो गया है। टाइपिंग में गति के साथ शुद्धता का होना अत्यंत आवश्यक है क्योंकि एक छोटी सी गलती पूरे वाक्य का अर्थ बदल सकती है। नियमित अभ्यास ही सफलता की कुंजी है।";
+// बहुत बड़ा पैसेज (इसे आप और भी बढ़ा सकते हैं)
+const largePassage = "भारत एक प्राचीन और महान देश है। यहाँ की मिट्टी में त्याग और तपस्या की महक बसी है। आधुनिक भारत आज विज्ञान और तकनीक के क्षेत्र में नए आयाम स्थापित कर रहा है। हिंदी भाषा हमारी संस्कृति की संवाहक है और मंगल फोंट का उपयोग आजकल डिजिटल इंडिया के दौर में बहुत महत्वपूर्ण हो गया है। कंप्यूटर पर हिंदी टाइपिंग सीखना न केवल सरकारी नौकरियों के लिए आवश्यक है बल्कि यह हमारे विचारों को मातृभाषा में व्यक्त करने का एक सशक्त माध्यम भी है। टाइपिंग में गति और शुद्धता प्राप्त करने के लिए नियमित अभ्यास की आवश्यकता होती है। यदि आप प्रतिदिन कम से कम एक घंटा अभ्यास करते हैं, तो आपकी टाइपिंग स्पीड में निश्चित ही सुधार होगा। परीक्षा के समय घबराना नहीं चाहिए और अपनी एकाग्रता को बनाए रखना चाहिए। याद रखें कि अभ्यास ही सफलता की एकमात्र कुंजी है। भारत की विविधता में एकता ही हमारी सबसे बड़ी शक्ति है। हमें अपने देश की विरासत पर गर्व होना चाहिए और इसे और बेहतर बनाने के लिए निरंतर कार्य करना चाहिए। डिजिटल युग में भाषा की कोई सीमा नहीं है और हिंदी वैश्विक स्तर पर अपनी पहचान बना रही है।";
 
-let timer, timeLeft, totalTimeInSeconds;
+let timer, timeLeft, totalTimeAllowed;
 let isStarted = false;
 
+// Elements
 const textInput = document.getElementById('text-input');
 const textDisplay = document.getElementById('text-display');
+const fontSizeSelect = document.getElementById('font-size-select');
 
-// लोड टेक्स्ट
-function init() {
-    textDisplay.innerHTML = sampleText.split(' ').map(word => `<span>${word}</span>`).join(' ');
+function initTest() {
+    const fontSize = fontSizeSelect.value;
+    textDisplay.style.fontSize = fontSize;
+    textDisplay.innerHTML = largePassage.split(' ').map(word => `<span>${word}</span>`).join(' ');
+    textInput.value = "";
 }
 
 document.getElementById('start-btn').addEventListener('click', () => {
-    const name = document.getElementById('user-name').value;
-    if (!name) return alert("नाम भरें!");
+    const name = document.getElementById('user-name').value.trim();
+    if (!name) return alert("कृपया अपना नाम लिखें!");
     
-    totalTimeInSeconds = parseInt(document.getElementById('time-limit').value);
-    timeLeft = totalTimeInSeconds;
+    totalTimeAllowed = parseInt(document.getElementById('time-limit').value);
+    timeLeft = totalTimeAllowed;
+    document.getElementById('display-name').innerText = name;
     
     document.getElementById('setup-screen').classList.add('hidden');
     document.getElementById('test-screen').classList.remove('hidden');
-    init();
+    initTest();
 });
 
 textInput.addEventListener('input', () => {
@@ -28,15 +34,22 @@ textInput.addEventListener('input', () => {
         isStarted = true;
         startTimer();
     }
-    matchWords();
+    compareText();
 });
 
-function matchWords() {
-    const wordsInDisplay = textDisplay.querySelectorAll('span');
+// मैनुअल सबमिट बटन
+document.getElementById('submit-btn').addEventListener('click', () => {
+    if(confirm("क्या आप टेस्ट समाप्त करना चाहते हैं?")) {
+        endTest();
+    }
+});
+
+function compareText() {
+    const spans = textDisplay.querySelectorAll('span');
     const typedWords = textInput.value.trim().split(/\s+/);
     let errors = 0;
 
-    wordsInDisplay.forEach((span, i) => {
+    spans.forEach((span, i) => {
         const typedWord = typedWords[i];
         if (typedWord == null) {
             span.className = '';
@@ -47,8 +60,7 @@ function matchWords() {
             errors++;
         }
     });
-    
-    document.getElementById('error-count').innerText = errors;
+    document.getElementById('live-errors').innerText = errors;
 }
 
 function startTimer() {
@@ -58,48 +70,48 @@ function startTimer() {
         let sec = timeLeft % 60;
         document.getElementById('timer').innerText = `${min}:${sec < 10 ? '0'+sec : sec}`;
         
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            showResult();
-        }
+        if (timeLeft <= 0) endTest();
     }, 1000);
 }
 
-function showResult() {
+function endTest() {
+    clearInterval(timer);
     document.getElementById('test-screen').classList.add('hidden');
     document.getElementById('result-screen').classList.remove('hidden');
 
     const typedWords = textInput.value.trim().split(/\s+/);
-    const grossWords = typedWords.length;
-    const errorCount = parseInt(document.getElementById('error-count').innerText);
+    const grossWords = typedWords[0] === "" ? 0 : typedWords.length;
+    const errorCount = parseInt(document.getElementById('live-errors').innerText);
     
-    // गणना नियम: 5 गलती माफ़, उसके बाद हर गलती पर 5 शब्द की कटौती
-    let penaltyCount = 0;
+    // पेनल्टी नियम: 5 गलती की छूट, उसके बाद 1 गलती = 5 शब्द की कटौती
+    let penalty = 0;
     if (errorCount > 5) {
-        penaltyCount = (errorCount - 5) * 5;
+        penalty = (errorCount - 5) * 5;
     }
 
-    const netWords = Math.max(0, grossWords - penaltyCount);
-    const timeInMinutes = totalTimeInSeconds / 60;
-    const netSpeed = Math.round(netWords / timeInMinutes);
+    const netWords = Math.max(0, grossWords - penalty);
+    const timeSpentMin = (totalTimeAllowed - timeLeft) / 60;
+    const wpm = timeSpentMin > 0 ? Math.round(netWords / timeSpentMin) : 0;
 
-    // पासिंग नियम: 5 मिनट में 125 शब्द (यानी 25 WPM)
-    const statusText = document.getElementById('status-text');
-    if (netWords >= 125 && totalTimeInSeconds === 300) {
-        statusText.innerText = "🎉 आप पास हो गए!";
-        statusText.className = "pass";
-    } else if (netSpeed >= 25) {
-        statusText.innerText = "🎉 अच्छी स्पीड! (Pass)";
-        statusText.className = "pass";
-    } else {
-        statusText.innerText = "❌ आप फेल हो गए! (मेहनत करें)";
-        statusText.className = "fail";
-    }
-
+    // रिजल्ट प्रदर्शन
     document.getElementById('res-name').innerText = document.getElementById('user-name').value;
     document.getElementById('res-gross').innerText = grossWords;
     document.getElementById('res-errors').innerText = errorCount;
-    document.getElementById('res-penalty').innerText = penaltyCount;
+    document.getElementById('res-penalty').innerText = penalty;
     document.getElementById('res-net').innerText = netWords;
-    document.getElementById('res-speed').innerText = netSpeed;
+    document.getElementById('res-speed').innerText = wpm;
+
+    // पास/फेल लॉजिक (5 मिनट में 125 नेट शब्द = 25 WPM)
+    const statusIcon = document.getElementById('status-icon');
+    const statusMsg = document.getElementById('status-message');
+    
+    if (netWords >= 125 && totalTimeAllowed >= 300) {
+        statusIcon.innerText = "🏆";
+        statusMsg.innerText = "बधाई हो! आप परीक्षा में पास हो गए।";
+        statusMsg.style.color = "green";
+    } else {
+        statusIcon.innerText = "📑";
+        statusMsg.innerText = "प्रयास जारी रखें! आपको और अभ्यास की जरूरत है।";
+        statusMsg.style.color = "red";
+    }
 }
