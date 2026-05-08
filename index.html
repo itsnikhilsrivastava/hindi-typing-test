@@ -3,33 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advance Hindi Typing Test</title>
+    <title>Professional Hindi Typing Test</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h2>हिंदी मंगल टाइपिंग मास्टर (Exam Mode)</h2>
+        <h2>हिंदी मंगल टाइपिंग मास्टर (Exam Pro)</h2>
         
         <!-- Setup Screen -->
         <div id="setup-screen" class="card">
-            <div class="input-group">
-                <input type="text" id="user-name" placeholder="अपना पूरा नाम लिखें">
-            </div>
-            <div class="input-group">
-                <label>समय चुनें:</label>
+            <input type="text" id="user-name" placeholder="अपना नाम लिखें">
+            <div class="options">
                 <select id="time-limit">
                     <option value="60">1 मिनट</option>
-                    <option value="120">2 मिनट</option>
                     <option value="300" selected>5 मिनट (परीक्षा)</option>
                     <option value="600">10 मिनट</option>
                 </select>
-            </div>
-            <div class="input-group">
-                <label>फॉन्ट साइज:</label>
                 <select id="font-size-select">
-                    <option value="20px">छोटा (Small)</option>
-                    <option value="26px" selected>मध्यम (Medium)</option>
-                    <option value="32px">बड़ा (Large)</option>
+                    <option value="22px">छोटा</option>
+                    <option value="28px" selected>मध्यम</option>
+                    <option value="34px">बड़ा</option>
                 </select>
             </div>
             <button id="start-btn" class="btn-primary">टेस्ट शुरू करें</button>
@@ -40,33 +33,25 @@
             <div class="stats-bar">
                 <span>👤 <span id="display-name"></span></span>
                 <span>⏱️ <span id="timer">00:00</span></span>
-                <span>❌ गलतियां: <span id="live-errors">0</span></span>
+                <span>WPM: <span id="live-wpm">0</span></span>
             </div>
             
             <div id="text-display" class="text-box"></div>
             
-            <textarea id="text-input" placeholder="टाइपिंग शुरू करें..." spellcheck="false"></textarea>
+            <input type="text" id="text-input" placeholder="यहाँ टाइप करें और स्पेस दबाएँ..." autocomplete="off">
             
             <div class="controls">
-                <button id="submit-btn" class="btn-danger">अभी सबमिट करें (Submit)</button>
-                <button onclick="location.reload()" class="btn-secondary">कैंसिल करें</button>
+                <button id="submit-btn" class="btn-danger">सबमिट (Submit)</button>
+                <button onclick="location.reload()" class="btn-secondary">रीसेट</button>
             </div>
         </div>
 
-        <!-- Dynamic Result Screen -->
+        <!-- Result Screen -->
         <div id="result-screen" class="hidden card">
             <h1 id="status-icon"></h1>
             <h2 id="status-message"></h2>
-            <hr>
-            <div class="result-grid">
-                <div class="res-item">नाम: <strong id="res-name"></strong></div>
-                <div class="res-item">कुल शब्द (Gross): <strong id="res-gross"></strong></div>
-                <div class="res-item">गलत शब्द: <strong id="res-errors"></strong></div>
-                <div class="res-item">पेनल्टी शब्द: <strong id="res-penalty"></strong></div>
-                <div class="res-item">शुद्ध शब्द (Net): <strong id="res-net"></strong></div>
-                <div class="res-item">नेट स्पीड: <strong id="res-speed"></strong> WPM</div>
-            </div>
-            <button class="btn-primary" onclick="location.reload()">नया टेस्ट शुरू करें</button>
+            <div class="result-grid" id="result-data"></div>
+            <button class="btn-primary" onclick="location.reload()">नया टेस्ट</button>
         </div>
     </div>
     <script src="script.js"></script>
